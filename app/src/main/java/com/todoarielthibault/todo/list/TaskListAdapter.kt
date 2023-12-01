@@ -5,17 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.todoarielthibault.todo.model.Task
 import com.todoarielthibault.todo.R
 
 class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
-    var currentList: List<String> = emptyList()
+    var currentList: List<Task> = emptyList()
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val taskTextView: TextView = itemView.findViewById(R.id.task_title)
+        private val taskTitleTextView: TextView = itemView.findViewById(R.id.taskTitleTextView)
+        private val taskDescriptionTextView: TextView = itemView.findViewById(R.id.taskDescriptionTextView)
 
-        fun bind(taskTitle: String) {
-            taskTextView.text = taskTitle
+        fun bind(task: Task) {
+            taskTitleTextView.text = task.title
+            taskDescriptionTextView.text = task.description
         }
     }
 

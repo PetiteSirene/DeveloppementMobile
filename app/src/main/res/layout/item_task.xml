@@ -6,7 +6,13 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/task_title"
+        android:id="@+id/taskTitleTextView"
+        android:background="@android:color/holo_blue_bright"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/taskDescriptionTextView"
         android:background="@android:color/holo_blue_bright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
