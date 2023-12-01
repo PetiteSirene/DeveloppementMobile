@@ -1,7 +1,0 @@
-package list
-
-class TaskListFragment {
-
-}
-
-
