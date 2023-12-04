@@ -26,6 +26,7 @@ class TaskListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        adapter.submitList(taskList)
         return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
