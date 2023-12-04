@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,6 +28,7 @@ class TaskListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         adapter.submitList(taskList)
+
         return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +41,12 @@ class TaskListFragment : Fragment() {
         floatingActionButton.setOnClickListener {
             val newTask = Task(id = UUID.randomUUID().toString(), title = "New task")
             taskList = taskList + newTask
+            adapter.submitList(taskList)
+        }
+
+        val imageButtonDelete = view.findViewById<ImageButton>(R.id.imageButtonDelete)
+        adapter.onClickDelete = { task ->
+            taskList = taskList.filterNot { it.id == task.id }
             adapter.submitList(taskList)
         }
     }

@@ -1,6 +1,7 @@
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,10 +14,15 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val taskTitleTextView: TextView = itemView.findViewById(R.id.taskTitleTextView)
         private val taskDescriptionTextView: TextView = itemView.findViewById(R.id.taskDescriptionTextView)
+        private val imageButtonDelete: ImageButton = itemView.findViewById(R.id.imageButtonDelete)
 
         fun bind(task: Task) {
             taskTitleTextView.text = task.title
             taskDescriptionTextView.text = task.description
+
+            imageButtonDelete.setOnClickListener {
+                onClickDelete.invoke(task)
+            }
         }
     }
 
@@ -38,4 +44,6 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
             return oldItem == newItem
         }
     }
+
+    var onClickDelete: (Task) -> Unit = {}
 }
