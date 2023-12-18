@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.todoarielthibault.todo.model.Task
 import com.todoarielthibault.todo.R
 
+
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,7 +27,7 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
             }
 
             imageButtonModify.setOnClickListener {
-                onClickModify.invoke(task)
+                onClickEdit.invoke(task)
             }
         }
     }
@@ -51,5 +52,5 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
     }
 
     var onClickDelete: (Task) -> Unit = {}
-    var onClickModify: (Task) -> Unit = {}
+    var onClickEdit: (Task) -> Unit = {}
 }

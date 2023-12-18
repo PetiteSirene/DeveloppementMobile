@@ -17,6 +17,9 @@ import com.todoarielthibault.todo.detail.DetailActivity
 import com.todoarielthibault.todo.model.Task
 import java.util.*
 
+
+
+
 class TaskListFragment : Fragment() {
 
 
@@ -76,7 +79,7 @@ class TaskListFragment : Fragment() {
 
 
         val imageButtonModify = view.findViewById<ImageButton>(R.id.imageButtonModify)
-        adapter.onClickModify = { task ->
+        adapter.onClickEdit = { task ->
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("taskToEdit", task)
             editTask.launch(intent)
