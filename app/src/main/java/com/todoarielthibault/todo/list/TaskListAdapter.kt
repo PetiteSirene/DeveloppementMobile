@@ -15,6 +15,7 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
         private val taskTitleTextView: TextView = itemView.findViewById(R.id.taskTitleTextView)
         private val taskDescriptionTextView: TextView = itemView.findViewById(R.id.taskDescriptionTextView)
         private val imageButtonDelete: ImageButton = itemView.findViewById(R.id.imageButtonDelete)
+        private val imageButtonModify: ImageButton = itemView.findViewById(R.id.imageButtonModify)
 
         fun bind(task: Task) {
             taskTitleTextView.text = task.title
@@ -22,6 +23,10 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
 
             imageButtonDelete.setOnClickListener {
                 onClickDelete.invoke(task)
+            }
+
+            imageButtonModify.setOnClickListener {
+                onClickModify.invoke(task)
             }
         }
     }
@@ -46,4 +51,5 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
     }
 
     var onClickDelete: (Task) -> Unit = {}
+    var onClickModify: (Task) -> Unit = {}
 }
