@@ -1,8 +1,15 @@
 // Dans un nouveau fichier, par exemple, Task.kt
 package com.todoarielthibault.todo.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Task(
+    @SerialName("id")
     val id: String,
+    @SerialName("content")
     val title: String,
-    val description: String = "Default Description"
+    @SerialName("description")
+    val description: String = "",
 ):java.io.Serializable

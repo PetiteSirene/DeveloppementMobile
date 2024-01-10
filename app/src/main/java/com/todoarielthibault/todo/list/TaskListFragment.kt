@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,6 +35,7 @@ class TaskListFragment : Fragment() {
         Task(id = "id_3", title = "Task 3", description = "description 3")
     )
     private val adapter = TaskListAdapter()
+    private val viewModel: TasksListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +57,11 @@ class TaskListFragment : Fragment() {
 
         val createTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = result.data?.getSerializableExtra("task") as Task?
-            taskList = taskList + task!!
-            adapter.submitList(taskList)
+            if (task != null) {
+                viewModel.add(task)
+            }
+            //taskList = taskList + task!!
+            //adapter.submitList(taskList)
         }
 
         val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.fabAddTask)
@@ -68,12 +73,12 @@ class TaskListFragment : Fragment() {
         val editTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = result.data?.getSerializableExtra("task") as Task?
             if(task != null){
-                taskList = taskList.map { if(it.id == task.id) task else it }
-                adapter.submitList(taskList)
+                viewModel.update(task)
+                //taskList = taskList.map { if(it.id == task.id) task else it }
+                //adapter.submitList(taskList)
             }
 
         }
-
 
 
         val imageButtonDelete = view.findViewById<ImageButton>(R.id.imageButtonDelete)
@@ -90,6 +95,13 @@ class TaskListFragment : Fragment() {
             editTask.launch(intent)
         }
 
+        lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
+            viewModel.tasksStateFlow.collect { newList ->
+                // cette lambda est exécutée à chaque fois que la liste est mise à jour dans le VM
+                // -> ici, on met à jour la liste dans l'adapter
+            }
+        }
+
     }
 
     override fun onResume() {
@@ -98,6 +110,7 @@ class TaskListFragment : Fragment() {
             val user = Api.userWebService.fetchUser().body()!!
             view?.findViewById<TextView>(R.id.UserInfo)?.setText(user.name)
         }
+        viewModel.refresh()
     }
 
 }

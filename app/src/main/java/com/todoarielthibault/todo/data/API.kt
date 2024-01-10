@@ -11,6 +11,9 @@ object Api {
     val userWebService : UserWebService by lazy {
         retrofit.create(UserWebService::class.java)
     }
+    val tasksWebService : TasksWebService by lazy {
+        retrofit.create(TasksWebService::class.java)
+    }
     private const val TOKEN = "16400a4989541c8621677c2526d8fe59cf66f1b2"
 
     private val retrofit by lazy {
