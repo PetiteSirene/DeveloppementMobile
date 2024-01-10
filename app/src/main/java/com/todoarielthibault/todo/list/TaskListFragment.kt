@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.todoarielthibault.todo.R
+import com.todoarielthibault.todo.data.Api
 import com.todoarielthibault.todo.detail.DetailActivity
 import com.todoarielthibault.todo.model.Task
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -85,6 +90,14 @@ class TaskListFragment : Fragment() {
             editTask.launch(intent)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val user = Api.userWebService.fetchUser().body()!!
+            view?.findViewById<TextView>(R.id.UserInfo)?.setText(user.name)
+        }
     }
 
 }
