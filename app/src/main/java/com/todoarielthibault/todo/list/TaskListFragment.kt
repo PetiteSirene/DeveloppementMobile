@@ -21,7 +21,9 @@ import com.todoarielthibault.todo.data.Api
 import com.todoarielthibault.todo.detail.DetailActivity
 import com.todoarielthibault.todo.model.Task
 import kotlinx.coroutines.launch
+import coil.load
 import java.util.*
+
 
 
 
@@ -109,6 +111,9 @@ class TaskListFragment : Fragment() {
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             view?.findViewById<TextView>(R.id.UserInfo)?.setText(user.name)
+            view?.findViewById<ImageView>(R.id.UserPhoto)?.load("https://goo.gl/gEgYUd") {
+                error(R.drawable.ic_launcher_background)
+            }
         }
         viewModel.refresh()
     }
