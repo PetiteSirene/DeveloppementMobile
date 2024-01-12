@@ -22,6 +22,7 @@ import com.todoarielthibault.todo.detail.DetailActivity
 import com.todoarielthibault.todo.model.Task
 import kotlinx.coroutines.launch
 import coil.load
+import com.todoarielthibault.todo.user.UserActivity
 import java.util.*
 
 
@@ -108,11 +109,19 @@ class TaskListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             view?.findViewById<TextView>(R.id.UserInfo)?.setText(user.name)
-            view?.findViewById<ImageView>(R.id.UserPhoto)?.load("https://goo.gl/gEgYUd") {
-                error(R.drawable.ic_launcher_background)
+
+            val userPhotoImageView = view?.findViewById<ImageView>(R.id.UserPhoto)
+            userPhotoImageView?.load("https://goo.gl/gEgYUd") {
+                error(R.drawable.ic_launcher_background) // Gérer les erreurs de chargement ici
+            }
+
+            userPhotoImageView?.setOnClickListener {
+                val intent = Intent(context, UserActivity::class.java)
+                startActivity(intent)
             }
         }
         viewModel.refresh()
