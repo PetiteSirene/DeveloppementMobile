@@ -115,7 +115,7 @@ class TaskListFragment : Fragment() {
             view?.findViewById<TextView>(R.id.UserInfo)?.setText(user.name)
 
             val userPhotoImageView = view?.findViewById<ImageView>(R.id.UserPhoto)
-            userPhotoImageView?.load("https://goo.gl/gEgYUd") {
+            userPhotoImageView?.load(user.avatar) {
                 error(R.drawable.ic_launcher_background) // Gérer les erreurs de chargement ici
             }
 
