@@ -1,7 +1,9 @@
 package com.todoarielthibault.todo.user
 
 // UserActivity.kt
+import android.Manifest
 import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
+import com.google.android.material.snackbar.Snackbar
 import com.todoarielthibault.todo.data.Api
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -60,6 +63,9 @@ class UserActivity : ComponentActivity() {
     private val captureUri by lazy {
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
     }
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -103,16 +109,43 @@ class UserActivity : ComponentActivity() {
                 }
             }
 
+            fun showMessage(message: String) {
+                Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG).show()
+            }
+
             val askPermission = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+                //à désactiver si sur un android de version supérieur à 10
+                /*
                 if (it){
                     pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
-                /*
                 else {
-                    pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    showMessage("Permission denied. Cannot pick a photo.")
                 }
                  */
+                //à activer si sur un android de version supérieur à 10
+                showMessage("voir code pour solution Tp4 question 9")
+                pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+
+
             }
+
+
+
+            fun pickPhotoWithPermission() {
+                val storagePermission = Manifest.permission.READ_EXTERNAL_STORAGE
+                val permissionStatus = checkSelfPermission(storagePermission)
+                val isAlreadyAccepted = permissionStatus == PackageManager.PERMISSION_GRANTED
+                val isExplanationNeeded = shouldShowRequestPermissionRationale(storagePermission)
+
+                when {
+                    isAlreadyAccepted -> pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    isExplanationNeeded -> showMessage("Permission required to pick a photo.")
+                    else -> askPermission.launch(storagePermission)
+                }
+            }
+
+
 
 
 
