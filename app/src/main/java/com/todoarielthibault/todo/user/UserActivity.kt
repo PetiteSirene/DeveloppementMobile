@@ -91,7 +91,17 @@ class UserActivity : ComponentActivity() {
 
                 }
             }
-// ...
+
+            val askPermission = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+                if (it){
+                    pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
+                /*
+                else {
+                    pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
+                 */
+            }
 
 
 
@@ -110,7 +120,7 @@ class UserActivity : ComponentActivity() {
                 )
                 Button(
                     onClick = {
-                        pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        askPermission.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                     },
                     content = { Text("Pick photo") }
                 )
