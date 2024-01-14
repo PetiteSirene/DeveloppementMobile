@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -42,6 +43,16 @@ class UserActivity : ComponentActivity() {
         )
     }
 
+    private fun Uri.toRequestBody(): MultipartBody.Part {
+        val fileInputStream = contentResolver.openInputStream(this)!!
+        val fileBody = fileInputStream.readBytes().toRequestBody()
+        return MultipartBody.Part.createFormData(
+            name = "avatar",
+            filename = "avatar.jpg",
+            body = fileBody
+        )
+    }
+
     private val photoUri by lazy {
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
     }
@@ -69,6 +80,17 @@ class UserActivity : ComponentActivity() {
                     }
                 }
             }
+
+            val pickPicture = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri->
+                if (uri != null) {
+                    val requestBody = uri.toRequestBody()
+                    composeScope.launch {
+                        userWebService.updateAvatar(requestBody)
+                    }
+                } else {
+
+                }
+            }
 // ...
 
 
@@ -87,7 +109,9 @@ class UserActivity : ComponentActivity() {
                     content = { Text("Take picture") }
                 )
                 Button(
-                    onClick = {},
+                    onClick = {
+                        pickPicture.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
                     content = { Text("Pick photo") }
                 )
             }
