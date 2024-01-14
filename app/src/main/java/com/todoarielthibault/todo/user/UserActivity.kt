@@ -53,7 +53,7 @@ class UserActivity : ComponentActivity() {
         )
     }
 
-    private val photoUri by lazy {
+    private val captureUri by lazy {
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
     }
 
@@ -69,9 +69,10 @@ class UserActivity : ComponentActivity() {
 
             val composeScope = rememberCoroutineScope()
 
+
             // launcher
             val takePicture = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                if (success) uri = photoUri
+                if (success) uri = captureUri
                 if (uri != null) {
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                     val requestBody = bitmap.toRequestBody()
@@ -80,6 +81,8 @@ class UserActivity : ComponentActivity() {
                     }
                 }
             }
+
+
 
             val pickPicture = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri->
                 if (uri != null) {
@@ -113,7 +116,7 @@ class UserActivity : ComponentActivity() {
                 )
                 Button(
                     onClick = {
-                        takePicture.launch(photoUri)
+                        takePicture.launch(captureUri)
 
                     },
                     content = { Text("Take picture") }
