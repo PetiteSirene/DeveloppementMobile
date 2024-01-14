@@ -13,23 +13,27 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.todoarielthibault.todo.data.Api
-import com.todoarielthibault.todo.data.Api.userWebService
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.util.*
 
 
 class UserActivity : ComponentActivity() {
 
+
+    private var username by mutableStateOf("")
 
     private fun Bitmap.toRequestBody(): MultipartBody.Part {
         val tmpFile = File.createTempFile("avatar", "jpg")
@@ -61,6 +65,10 @@ class UserActivity : ComponentActivity() {
 
         val userWebService = Api.userWebService
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            username = userWebService.fetchUser().body()!!.name
+        }
 
         setContent {
             var bitmap: Bitmap? by remember { mutableStateOf(null) }
@@ -126,6 +134,23 @@ class UserActivity : ComponentActivity() {
                         askPermission.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                     },
                     content = { Text("Pick photo") }
+                )
+                Text("Username: $username", modifier = Modifier.padding(16.dp))
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = { newName -> username = newName },
+                    label = { Text("Edit Username") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+                Button(
+                    onClick = {
+                        lifecycleScope.launch {
+                            userWebService.update(UserUpdate(username))
+                        }
+                    },
+                    content = { Text("Valider") }
                 )
             }
         }
